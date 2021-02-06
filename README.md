@@ -1,7 +1,3 @@
-# Demo af
+# Web Calculator
 
-Description af
-
-## Subheader af
-
-I need some sleep probably
+A simple four operation calculator written to practice javascript and css.
