@@ -18,7 +18,7 @@ class Calculator
 
     delete()
     {
-
+        this.currentOperand = this.currentOperand.toString().slice(0, -1)
     }
 
     appendNumber(number)
@@ -70,10 +70,48 @@ class Calculator
         this.previousOperand = ''
     }
 
+    getDisplayNumber(number)
+    {
+        const stringNumber = number.toString()                          //turn the number to a string
+        const integerDigits = parseFloat(stringNumber.split('.')[0])    //split the string at the period, take the first part
+        const decimalDigits = parseFloat(stringNumber.split('.')[1])    //split the string at the period, take the second part
+
+        let integerDisplay
+        if (isNaN(integerDigits))
+        {
+            integerDisplay = ''
+        }
+        else
+        {
+            integerDisplay = integerDigits.toLocaleString('en', {
+            maximumFractionDigits: 0  })
+        }
+
+        if (!isNaN(decimalDigits))
+        {
+            return `${integerDisplay}.${decimalDigits}`
+        }
+        else if (stringNumber.includes('.'))
+        {
+            return `${integerDisplay}.`
+        }
+        else
+        {
+            return integerDisplay
+        }
+    }
+
     updateDisplay()
     {
-        this.currentOperandTextElement.innerText = this.currentOperand
-        this.previousOperandTextElement.innerText = this.previousOperand
+        this.currentOperandTextElement.innerText = this.getDisplayNumber(this.currentOperand)
+        if (this.operation != null)
+        {
+            this.previousOperandTextElement.innerText = `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
+        }
+        else
+        {
+            this.previousOperandTextElement.innerText = ''
+        }
     }
 }
 
@@ -104,7 +142,20 @@ operationButtons.forEach(button => {
     })
 })
 
+//Adding the listener for the equals button
 equalsButton.addEventListener('click', button => {
     calculator.compute()
+    calculator.updateDisplay()
+})
+
+//Adding the listener for the equals button
+allClearButton.addEventListener('click', button => {
+    calculator.clear()
+    calculator.updateDisplay()
+})
+
+//Adding the listener for the equals button
+deleteButton.addEventListener('click', button => {
+    calculator.delete()
     calculator.updateDisplay()
 })
